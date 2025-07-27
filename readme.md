@@ -1,45 +1,118 @@
-# marvel-api-app
-A simple Node.js application to interact with the Marvel API, allowing you to fetch character data and explore the Marvel Universe programmatically.
+# Comic Vine Express API
 
-## Installation
+A simple Express.js backend to fetch comic character and issue data from the [Comic Vine API](https://comicvine.gamespot.com/api/). Designed to be used as a backend for a React Native comic collecting application.
+
+---
+
+## 🚀 Features
+
+- 🔍 Fetch all comic characters (paginated, 100 per request)
+
+- 👤 Fetch details for a specific character by ID
+
+- 📘 Fetch details for a specific comic issue by ID
+
+- 🔐 Uses `.env` for API key management
+
+- 🔧 Built with `express`, `axios`, and `dotenv`
+
+---
+
+## 📦 Setup
+
+1. Clone the repository:
+
+```
+git clone https://github.com/charlespalmerbf/comicvine-api-server.git
+
+cd comicvine-api-server
+```
+
+Install dependencies:
+
+```
 npm install
+```
 
-Before running the application, make sure to set your Marvel API credentials in a .env file at the root of the project:
+Create a .env file in the root of the project and add your Comic Vine API key:
 
-MARVEL_PUBLIC_KEY=your_public_key
-MARVEL_PRIVATE_KEY=your_private_key
+```
+API_KEY=your_comicvine_api_key
+```
 
-## Usage
-To fetch Marvel characters by name prefix, simply run the application:
+Start the server:
 
-```node index.js```
+```
+node index.js
+```
 
-You can modify the fetchCharacters() call inside index.js to use a different search prefix if desired.
+The server will start on http://localhost:3000.
 
-## Marvel API Authentication
-Marvel API requires a unique hash for authentication on each request. This application generates it using:
+## 📘 API Endpoints
 
-- A timestamp
-- Your private key
-- Your public key
+GET /characters
 
-It combines these to produce an MD5 hash as required by the API.
+Returns up to 100 comic characters (Comic Vine API max).
 
-## Project Structure
-.
-├── index.js              # Main application logic
-├── .env                 # Environment variables (not committed to Git)
-├── .gitignore           # Files and folders to be excluded from Git
-├── package.json         # Node.js dependencies and scripts
-└── README.txt           # This file
+```
+GET http://localhost:3000/characters
+```
 
-## Example Output
-Characters:
-- Spider-Man
-- Spider-Woman (Jessica Drew)
-- Spider-Woman (Julia Carpenter)
-- Spider-Girl (Anya Corazon)
-- Spider-Ham
+Returns a list of characters with all available fields.
+
+```
+GET /character/:id
+```
+
+Returns detailed data for a single character.
+
+Comic Vine character IDs are in the format 4005-<id>, and this route expects only the numeric part.
+
+```
+GET http://localhost:3000/character/123
+```
+
+Internally calls:
+
+```
+https://comicvine.gamespot.com/api/character/4005-123/
+```
+
+```
+GET /issue/:id
+```
+
+Returns detailed data for a single issue.
+
+Comic Vine issue IDs are in the format 4000-<id>, and this route expects only the numeric part.
+
+```
+GET http://localhost:3000/issue/4567
+```
+
+Internally calls:
+
+```
+https://comicvine.gamespot.com/api/issue/4000-4567/
+```
+
+## 📌 Notes
+
+All endpoints return full field sets (no field_list is specified).
+
+The /characters endpoint is limited to 100 results per request.
+
+Add pagination support via the offset query param if needed.
+
+API rate limits may apply --- consider caching or retries for production.
+
+## 🛠 Built With
+
+- Express
+
+- Axios
+
+- dotenv
 
 ## Contributing
 Contributions to this project are welcome! If you find bugs or have suggestions, feel free to open an issue or submit a pull request on GitHub.
